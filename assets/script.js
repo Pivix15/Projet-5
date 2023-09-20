@@ -23,31 +23,30 @@ const arrow_left = document.querySelector(".arrow_left");
 const arrow_right = document.querySelector(".arrow_right");
 const bannerImg = document.querySelector('.banner-img');
 const tagLine = document.querySelector('#banner p');
+
 // Initialisation currentSlide variable
 let currentSlide = 0;
+
+// Creation des points
 function generateDots() {
-	// boucle parcourir slides
 	for (i = 0; i < slides.length; i++) {
-		// Créer balise div a chaque passage du i
 		const dot = document.createElement("div");
-		//Ajout de la class dot
 		dot.classList.add('dot');
 		dot.setAttribute("data.id", i);
-		// Vérification que i == currentSlide
 		if (i === currentSlide) {
-			//Ajout de l'élement dot_selected
 			dot.classList.add('dot_selected');
 		}
-		// Attache le dot au parent dots
 		dots.appendChild(dot);
 	}
 }
 //lancement de la fonction dots
 generateDots();
+
 // recupération nombre Dots
-const dotsNbr = document.querySelectorAll('.dot');
-dotsNbr.forEach((dot) => {
-	dot.addEventListener('click', (event) => {
+const dotsList = document.querySelectorAll('.dot');
+// pour tout les éléments de la list
+dotsList.forEach( function(dot) {
+	dot.addEventListener('click', function () {
 		const data_id = dot.getAttribute('data.id');
 		updateSlide(data_id - currentSlide);
 	});
@@ -56,18 +55,21 @@ dotsNbr.forEach((dot) => {
 // Ajout de l'event click pour la flèche gauche
 arrow_left.addEventListener("click", function () {
 	console.log("Gauche");
-	//Update des points et des slides
 	updateSlide(-1);
 });
 // Ajout de l'event click pour la flèche droite
 arrow_right.addEventListener("click", function () {
 	console.log("Droite");
-	//update des dots et slides
-	updateSlide(+1);
+	updateSlide(1);
 });
 
-function updateSlide(value) {
-	currentSlide = (currentSlide + value + slides.length) % slides.length
+function updateSlide(offset) {
+	currentSlide += offset
+	if (currentSlide >= slides.length) {
+		currentSlide = 0
+	} else if (currentSlide < 0) {
+		currentSlide = slides.length -1
+	}
 	console.log(currentSlide);
 	// Mise a jour de l'image via les assets
 	bannerImg.src = `./assets/images/slideshow/${slides[currentSlide].image}`;
@@ -76,10 +78,7 @@ function updateSlide(value) {
 	updateDot();
 }
 function updateDot() {
-	//Récupération du dot selected
 	const selected = document.querySelector('.dot_selected');
-	// retirer la class a ce dots
 	selected.classList.remove('dot_selected');
-	// Ajouté dot_select au dots actuel
-	dotsNbr[currentSlide].classList.add('dot_selected');
+	dotsList[currentSlide].classList.add('dot_selected');
 }
